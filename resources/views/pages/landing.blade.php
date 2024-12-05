@@ -10,5 +10,10 @@
         'description' => $articles->description,
         'article_id' => $articles->id
     ])
+    @if(session('message'))
+        <div class="alert">
+            {{ session('message') }}
+        </div>
+    @endif
     
 @endsection

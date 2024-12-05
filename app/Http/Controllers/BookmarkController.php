@@ -14,14 +14,18 @@ class BookmarkController extends Controller
         ]);
 
         $userId = auth()->id();
-
-        $bookmark = Bookmark::where('user_id', $userId)->where('article_id', $request->article_id)->first();
+        $articleId = $request->article_id;
+        $bookmark = Bookmark::where('user_id', $userId)->where('article_id', $articleId)->first();
 
         if($bookmark) {
             $bookmark->delete();
             return redirect()->back()->with('message', 'Bookmark removed!');
         } else {
-            
+            Bookmark::create([
+                'user_id' => $userId,
+                'article_id' => $articleId,
+            ]);
+            return redirect()->back()->with('message', 'Added to bookmark!');
         }
     }
 }
