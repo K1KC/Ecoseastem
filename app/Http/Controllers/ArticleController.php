@@ -9,7 +9,13 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     private function showAllArticles() {
-        $articles = Article::all();
+        $articles = Article::orderBy('created_at', 'desc')->with('category')->paginate(10);
         return view('pages.landing', compact('articles'));
     }
+
+    private function showArticlePerCategory() {
+        //
+    }
+
+
 }
