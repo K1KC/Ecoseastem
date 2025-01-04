@@ -13,9 +13,13 @@
             <input type="hidden" name="article_id" value="{{ $article_id }}">
 
             @if(in_array($article_id, $user_bookmarks))
-                <button type="submit" name="action" value="remove">Remove from Bookmark</button>
+                <button type="submit" name="action" value="remove">
+                    <img src="{{ asset('bookmark-active.png') }}">
+                </button>
             @else
-                <button type="submit" name="action" value="add">Bookmark</button>
+                <button type="submit" name="action" value="add">
+                    <img src="{{ asset('bookmark-nonactive.png') }}">
+                </button>
             @endif
         </form>       
     </div>

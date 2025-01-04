@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class BookmarkController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function bookmark(Request $request) {
         $request->validate([
             'article_id' => 'required|exist:articles,id'
@@ -30,13 +34,13 @@ class BookmarkController extends Controller
         }
     }
 
-    public function getBookmark() {
+    public function getThisUserBookmark() {
         $user_id = auth()->id();
-        return $user_bookmarks = Bookmark::where('user_id', $user_id)->pluck('article_id');
+        return $user_bookmarks = Bookmark::where('user_id', $user_id)->pluck('article_id')->toArray();
     }
 
     public function getBookmarkedArticles() {
-        $user_bookmarks = $this->getBookmark();
+        $user_bookmarks = $this->getThisUserBookmark();
         $articles = Article::whereIn('id', $user_bookmarks)->paginate(10);
         return view('pages.bookmark', compact('articles'));
     }

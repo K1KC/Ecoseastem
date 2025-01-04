@@ -7,15 +7,19 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     protected $articleController;
+    protected $bookmarkController;
+    protected $merchandiseController;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ArticleController $articleController)
+    public function __construct(ArticleController $articleController, BookmarkController $bookmarkController, MerchandiseController $merchandiseController)
     {
         // $this->middleware('auth');
         $this->articleController = $articleController;
+        $this->bookmarkController = $bookmarkController;
+        $this->merchandiseController = $merchandiseController;
     }
 
     /**
@@ -26,7 +30,8 @@ class HomeController extends Controller
     public function index()
     {
         $articles = $this->articleController->articleOTD();
-        $user_bookmarks = $this->articleController->getUser_bookmarks();
-        return view('pages.landing', compact('articles', 'user_bookmarks'));
+        $user_bookmarks = $this->bookmarkController->getThisUserBookmark();
+        $merchs = $this->merchandiseController->getAllMerchs();
+        return view('pages.landing', compact('articles', 'user_bookmarks', 'merchs'));
     }
 }

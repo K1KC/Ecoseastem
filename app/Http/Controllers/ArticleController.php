@@ -13,29 +13,23 @@ class ArticleController extends Controller
     protected $categoryController;
     protected $bookmarkController;
 
-    public function __construct(CategoryController $categoryController)
+    public function __construct(CategoryController $categoryController, BookmarkController $bookmarkController)
     {
         $this->categoryController = $categoryController;
-    }
-
-
-
-    public function getUser_bookmarks() {
-        $user_id = auth()->id();
-        return $user_bookmarks = Bookmark::where('user_id', $user_id)->pluck('article_id')->toArray();
+        $this->bookmarkController = $bookmarkController;
     }
 
     public function articlesPage() {
         $articles = Article::orderBy('created_at', 'desc')->with('category')->paginate(10);
         $categories = $this->categoryController->getAllCategories();
         $user_id = auth()->id();
-        $user_bookmarks = $this->getUser_bookmarks();
+        $user_bookmarks = $this->bookmarkController->getThisUserBookmark();
         $category_ph = "Select Category";
         return view('pages.articles', compact('articles', 'categories', 'category_ph', 'user_bookmarks'));
     }
 
     public function articleOTD() {
-        return $articlesOTD = Article::inRandomOrder()->take(5)->get();
+        return $articlesOTD = Article::orderBy('created_at', 'desc')->get();
     }
     public function showArticlePerCategory(Request $request) {
         $category_id = $request->input('category_id');
@@ -49,7 +43,7 @@ class ArticleController extends Controller
         $user_id = auth()->id();
         $current_category = Category::find($category_id);
         $category_ph = $current_category->name;
-        $user_bookmarks = $this->getUser_bookmarks();
+        $user_bookmarks = $this->bookmarkController->getThisUserBookmark();
         return view('pages.articles', compact('articles', 'categories', 'category_ph', 'user_bookmarks'));
     }
 

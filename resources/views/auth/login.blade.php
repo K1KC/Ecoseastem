@@ -1,5 +1,5 @@
-@extends('layouts.app')
-
+@extends('layout.app')
+@section('title', 'Home Page')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -65,6 +65,10 @@
                             </div>
                         </div>
                     </form>
+                    <p class="mt-10 text-center text-sm/6 text-gray-500">
+                        Don't have account yet?
+                        <a href="/register" class="font-semibold text-indigo-600 hover:text-indigo-500">Register here</a>
+                    </p>
                 </div>
             </div>
         </div>

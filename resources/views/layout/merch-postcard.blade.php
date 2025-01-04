@@ -11,5 +11,5 @@
     <h3><a class="text-xl font-bold mb-2" href="">Name</a></h3>
     <p class="text-gray-600 mb-2">Merch description goes here</p>
     <h4 class="text-xl font-bold mb-2">Stock: 9999</h4>
-    <button>Buy for Rp99000</button>
+    <h4 class="text-xl font-bold mb-2">Rp:</h4>
 </div>

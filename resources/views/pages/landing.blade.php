@@ -4,7 +4,7 @@
 <div class="banner bg-cover bg-center text-white text-center py-64 relative overflow-hidden" style="background-image: url('banner.jpg')">
     <div class="banner-content w-full sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
         <h1 class="text-4xl font-semibold mb-4">Ecoseastem</h1>
-        <p class="text-lg mb-6">Provide all of the knowledge of the ocean to honour the might and beautiful ocean!</p>
+        <p class="text-lg mb-6">Provide all of the knowledge of the ocean to honour and preserve the might and beautiful ocean!</p>
     </div>
     <div class="curve absolute bottom-0 left-0 right-0 h-32 bg-blue-500"></div>
 </div>
@@ -27,18 +27,18 @@
     </section>
 
     <section class="mt-10 ml-8 mr-8">
-        <h3 class="text-2xl font-bold mb-6">Our Merch of the day</h3>
+        <h3 class="text-2xl font-bold mb-6">Our Merch</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @include('layout.merch-postcard')
-            {{-- @foreach($merchs as $merch)
-                @include('layout.merch-postcard', [
+            @foreach($merchs as $merch)
+                @include('layout.merch-card', [
                     'merch_id'=>$merch->merch_id,
-                    'merch_name'=>$merch->name,
-                    'merch_desc'=>$merch->desc,
-                    'merch_stock'=>$merch->stock,
-                    'merch_price'=>$merch->price
+                    'name'=>$merch->name,
+                    'description'=>$merch->desc,
+                    'stock'=>$merch->stock,
+                    'price'=>$merch->price
                 ])
-            @endforeach --}}
+            @endforeach
         </div>
     </section>
 @endsection

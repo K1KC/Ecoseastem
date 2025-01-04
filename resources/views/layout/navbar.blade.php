@@ -22,7 +22,7 @@
             <a href="/merch" class="{{ Request::is('merch') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md px-3 py-2 text-sm font-medium" 
                 aria-current="{{ Request::is('merch') ? 'page' : 'false' }}">Merch</a>
             <a href="/about-us" class="{{ Request::is('about-us') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md px-3 py-2 text-sm font-medium" 
-                aria-current="{{ Request::is('bookmark') ? 'page' : 'false' }}">About Us</a>
+                aria-current="{{ Request::is('about.us') ? 'page' : 'false' }}">About Us</a>
           </div>
         </div>
       </div>
@@ -35,24 +35,48 @@
           </svg>
         </button>
 
+
         <!-- Profile dropdown -->
         <div class="relative ml-3">
+          @guest
+          <div>
+            <a href="{{ route('login') }}">
+              <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                <img class="size-8 rounded-full" src="{{ asset('avatar-icon.png')}}" alt="">
+              </button>              
+            </a>
+
+          </div>
+
+        @else
           <div>
             <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
               <span class="absolute -inset-1.5"></span>
-              <span class="sr-only">Open user menu</span>
-              <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              <img class="size-8 rounded-full" src="{{ asset('avatar-icon.png')}}" alt="">
             </button>
           </div>
 
-          <!-- Dropdown menu -->
-          <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <a href="/profile" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="/bookmark" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Bookmark</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Transactions History</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-          </div>
+            <!-- Dropdown menu -->
+            <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+              @php
+                  $current_username = auth()->user()->name;
+              @endphp
+              <a href="{{ route('profile', $current_username) }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+
+              <a href="{{ route('bookmark') }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Bookmark</a>
+
+              <!-- Transaction History Nav -->
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Transactions History</a> 
+
+              <!-- Logout -->
+              <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-3" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>   
+              <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                @csrf
+              </form>
+
+            </div>
+        @endguest
+
         </div>
       </div>
     </div>
@@ -60,11 +84,10 @@
 
   <!-- Mobile menu, initially hidden -->
   <div id="mobile-menu" class="sm:hidden hidden space-y-1 px-2 pb-3 pt-2">
-    <a href="/articles" class="{{ Request::is('postcard') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium" 
-        aria-current="{{ Request::is('articles') ? 'page' : 'false' }}">Articles</a>
-    <a href="/merch" class="{{ Request::is('merch') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium" 
-        aria-current="{{ Request::is('merch') ? 'page' : 'false' }}">Merch</a>
-    <a href="/bookmark" class="{{ Request::is('bookmark') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium" 
-        aria-current="{{ Request::is('bookmark') ? 'page' : 'false' }}">About Us</a>
+    <a href="/articles" class="{{ Request::is('postcard') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium" aria-current="{{ Request::is('articles') ? 'page' : 'false' }}">Articles</a>
+    
+    <a href="/merch" class="{{ Request::is('merch') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium"  aria-current="{{ Request::is('merch') ? 'page' : 'false' }}">Merch</a>
+
+    <a href="/about-us" class="{{ Request::is('about.us') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium" aria-current="{{ Request::is('about.us') ? 'page' : 'false' }}">About Us</a>
   </div>
 </nav>

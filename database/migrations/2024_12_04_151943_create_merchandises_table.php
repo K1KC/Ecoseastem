@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('merchandises', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('thumbnail_link');
             $table->integer('price');
             $table->string('description');
             $table->integer('stock');
