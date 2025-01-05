@@ -1,5 +1,5 @@
 @extends('layout.app')
-{{-- @section('title', 'Home Page') --}}
+@section('title', 'Home Page')
 @section('content')
 <div class="banner bg-cover bg-center text-white text-center py-64 relative overflow-hidden" style="background-image: url('banner.jpg')">
     <div class="banner-content w-full sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
@@ -20,7 +20,7 @@
                 'description'=>$article->description,
                 'uploaded_date'=>$article->uploaded_date,
                 'author_name'=>$article->author_name,
-                'article_id'=>$article->article_id,
+                'article_id'=>$article->id,
                 'user_bookmarks'=>$user_bookmarks
             ])
         @endforeach

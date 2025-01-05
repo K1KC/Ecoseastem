@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::post('/confirm-order', [TransactionController::class])
     
     Route::get('/profile/{current_username}', [ProfileController::class, 'viewProfile'])->name('profile');
-
+    Route::post('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
     Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
     Route::post('/payment/notification', [PaymentController::class, 'notification'])->name('payment.notification');
     Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');

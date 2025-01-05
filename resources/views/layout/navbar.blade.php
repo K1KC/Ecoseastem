@@ -13,7 +13,7 @@
       </div>
       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
         <div class="flex shrink-0 items-center">
-          <a href="{{ route('home')}}"><img class="h-8 w-auto" src="{{asset('Logo.png')}}" alt="Ecoseastem"></a>
+          <a href="{{ route('home')}}"><img class="h-10 w-auto" src="{{asset('Logo.png')}}" alt="Ecoseastem"></a>
         </div>
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
@@ -52,7 +52,11 @@
           <div>
             <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
               <span class="absolute -inset-1.5"></span>
-              <img class="size-8 rounded-full" src="{{ asset('avatar-icon.png')}}" alt="">
+              @if(auth()->user()->profile_picture)
+                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile Picture" class="w-24 h-24 mx-auto rounded-full object-cover">
+              @else
+                <img class="w-24 h-24 mx-auto rounded-full object-cover" src="{{ asset('avatar-icon.png')}}" alt="Profile Picture">
+              @endif
             </button>
           </div>
 

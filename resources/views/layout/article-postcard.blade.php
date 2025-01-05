@@ -10,18 +10,17 @@
     <div class="pt-5">
         <form action="{{ route('edit.bookmark') }}" method="POST">
             @csrf
-            <input type="hidden" name="article_id" value="{{ $article_id }}">
-
             @if(in_array($article_id, $user_bookmarks))
-                <button type="submit" name="action" value="remove">
-                    <img src="{{ asset('bookmark-active.png') }}">
+                <button type="submit" name="article_id" value="{{ $article_id }}">
+                    <img class="size-5" src="{{ asset('bookmark-active.png') }}">
                 </button>
             @else
-                <button type="submit" name="action" value="add">
-                    <img src="{{ asset('bookmark-nonactive.png') }}">
+                <button type="submit" name="article_id" value="{{ $article_id }}">
+                    <img class="size-5" src="{{ asset('bookmark-nonactive.png') }}">
                 </button>
             @endif
-        </form>       
+        </form>     
+        
     </div>
 
 </div>

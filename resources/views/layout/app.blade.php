@@ -52,6 +52,9 @@
 
     <main class="container mx-auto my-8 flex-grow mt-0">
         @yield('content')
+        @if (session('message'))
+            @include('layout.popup', ['message' => session('message')])
+        @endif
     </main>
 
     @include('layout.footer')

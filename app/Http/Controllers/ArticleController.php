@@ -35,7 +35,7 @@ class ArticleController extends Controller
         $category_id = $request->input('category_id');
 
         if($category_id == 0) {
-            return $this->articlesPage();
+            return route('articles');
         }
 
         $articles = Article::where('category_id', $category_id)->paginate(10);

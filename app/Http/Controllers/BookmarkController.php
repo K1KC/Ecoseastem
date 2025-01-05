@@ -14,8 +14,9 @@ class BookmarkController extends Controller
     }
 
     public function bookmark(Request $request) {
+
         $request->validate([
-            'article_id' => 'required|exist:articles,id'
+            'article_id' => 'required|exists:articles,id'
         ]);
 
         $userId = auth()->id();
@@ -35,13 +36,17 @@ class BookmarkController extends Controller
     }
 
     public function getThisUserBookmark() {
-        $user_id = auth()->id();
-        return $user_bookmarks = Bookmark::where('user_id', $user_id)->pluck('article_id')->toArray();
+        if (auth()->check()) {
+            $user_id = auth()->user()->id;
+            return Bookmark::where('user_id', $user_id)->pluck('article_id')->toArray();
+        }
+
+        return [];
     }
 
     public function getBookmarkedArticles() {
         $user_bookmarks = $this->getThisUserBookmark();
         $articles = Article::whereIn('id', $user_bookmarks)->paginate(10);
-        return view('pages.bookmark', compact('articles'));
+        return view('pages.bookmark', compact('articles', 'user_bookmarks'));
     }
 }

@@ -30,7 +30,7 @@
                 'description'=>$article->description,
                 'uploaded_date'=>$article->uploaded_date,
                 'author_name'=>$article->author_name,
-                'article_id'=>$article->article_id,
+                'article_id'=>$article->id,
                 'user_bookmarks'=>$user_bookmarks
                 ])
             @endforeach
