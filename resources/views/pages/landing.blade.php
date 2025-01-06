@@ -29,12 +29,11 @@
     <section class="mt-10 ml-8 mr-8">
         <h3 class="text-2xl font-bold mb-6">Our Merch</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @include('layout.merch-postcard')
             @foreach($merchs as $merch)
                 @include('layout.merch-card', [
                     'merch_id'=>$merch->merch_id,
                     'name'=>$merch->name,
-                    'description'=>$merch->desc,
+                    'description'=>$merch->description,
                     'stock'=>$merch->stock,
                     'price'=>$merch->price
                 ])

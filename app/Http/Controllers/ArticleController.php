@@ -22,7 +22,6 @@ class ArticleController extends Controller
     public function articlesPage() {
         $articles = Article::orderBy('created_at', 'desc')->with('category')->paginate(10);
         $categories = $this->categoryController->getAllCategories();
-        $user_id = auth()->id();
         $user_bookmarks = $this->bookmarkController->getThisUserBookmark();
         $category_ph = "Select Category";
         return view('pages.articles', compact('articles', 'categories', 'category_ph', 'user_bookmarks'));
@@ -47,4 +46,30 @@ class ArticleController extends Controller
         return view('pages.articles', compact('articles', 'categories', 'category_ph', 'user_bookmarks'));
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $articles = Article::where('title', 'like', '%' . $query . '%')->get();
+
+        $user_bookmarks = $this->bookmarkController->getThisUserBookmark();
+        return view('pages.articles-search', compact('articles', 'user_bookmarks'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|in:facts,education,news',
+            'source_url' => 'required|url',
+            'author_name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'upload_date' => 'required|date'
+        ]);
+
+        // Create new article
+        Article::create($validated);
+
+        return redirect()->route('articles')->with('success', 'Article Uploaded Successfully!');
+    }
 }

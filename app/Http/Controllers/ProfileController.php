@@ -4,40 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function viewProfile($current_username) {
+    public function viewProfile() {
         $user = auth()->user();
         $totalPrice = Transaction::where('user_id', $user->id)->sum('total_price');
-        return view('pages.profile', compact('totalPrice', 'user', 'current_username'));
+        return view('pages.profile', compact('totalPrice', 'user'));
     }
 
-    public function updateProfilePicture(Request $request)
-{
-    // Validate the incoming request
-    $request->validate([
-        'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+    public function edit()
+    {
+        return view('pages.edit-profile', ['user' => auth()->user()]);
+    }
 
-    // Handle the file upload
-    if ($request->hasFile('profile_picture') && $request->file('profile_picture')->isValid()) {
-        $file = $request->file('profile_picture');
+    public function update(Request $request)
+    {
+        // Validate the input
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255|unique:users,email,' . Auth::id(),
+            'phone' => 'nullable|string|max:12',
+            'password' => 'nullable|string|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Profile picture validation
+        ]);
 
-        $userId = auth()->user()->id;
-        $fileExtension = $file->getClientOriginalExtension();
-        $fileName = 'profile_pic-' . $userId . '.' . $fileExtension;
+        $user = Auth::user();
 
-        $filePath = $file->storeAs('profile_pictures', $fileName, 'public');  // Store in 'storage/app/public/profile_pictures'
+        // Update name and email
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
 
-        $user = auth()->user();
-        $user->profile_picture = $filePath;
+        // Update profile picture if uploaded
+        if ($request->hasFile('profile_picture')) {
+            // Delete the old profile picture if exists
+            if ($user->profile_picture) {
+                Storage::delete($user->profile_picture);
+            }
+
+            // Store new profile picture
+            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $profilePicturePath;
+        }
+
+        // Save the changes
         $user->save();
 
-        return back()->with('success', 'Profile picture updated successfully!');
+        return redirect()->route('profile', $user->name)->with('success', 'Profile updated successfully!');
     }
-
-    return back()->with('error', 'Failed to upload profile picture.');
-}
 
 }

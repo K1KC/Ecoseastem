@@ -2,6 +2,19 @@
 @section('title', 'Home Page')
 @section('content')
 <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+
+    @if (session('error'))
+        <div id="errorPopup" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h2 class="text-lg font-bold text-red-600 mb-4">Payment Failed</h2>
+                <p class="text-gray-600">{{ session('error') }}</p>
+                <button onclick="closePopup('errorPopup')" class="mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+                    Close
+                </button>
+            </div>
+        </div>
+    @endif
+
     <form id="checkout-form" method="POST" action="{{ route('checkout') }}">
         @csrf
         <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
@@ -33,7 +46,7 @@
             <input type="hidden" name="total" value="{{ $total }}">
             <div class="mt-6">
                 <button type="button" id="pay-button" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">
-                    Confirm order
+                    Confirm Order
                 </button>
             </div>
         </div>
@@ -74,5 +87,12 @@
             }
         });
     });
+
+    function closePopup(popupId) {
+        const popup = document.getElementById(popupId);
+        if (popup) {
+            popup.style.display = 'none';
+        }
+    }
 </script>
 @endsection

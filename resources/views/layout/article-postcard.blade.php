@@ -1,6 +1,6 @@
 <div class="bg-white p-6 shadow-lg rounded-lg">
     <div>
-        <div class="bg-gray-300 h-32 w-full mb-4"></div>
+        {{-- <div class="bg-gray-300 h-32 w-full mb-4"></div> --}}
         <h3><a class="text-xl font-bold mb-2" href="{{ $source_url }}">{{$title}}</a></h3>
         <h4 class="pb-3">{{$category}}</h4>
         <p class="text-gray-600">{{$description}}</p>

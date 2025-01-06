@@ -10,4 +10,9 @@ class Merchandise extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'thumbnail_link','description', 'price', 'stock'];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

@@ -49,4 +49,9 @@ class User extends Authenticatable
     public function bookmark() {
         return $this->hasMany(Bookmark::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

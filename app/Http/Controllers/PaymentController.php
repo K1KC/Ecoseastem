@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReceiptMail;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\Merchandise;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -30,8 +34,7 @@ class PaymentController extends Controller
             'user_id' => auth()->id(),
             'merch_id' => $request->merch_id,
             'total_price' => $request->total,
-            'status' => 'pending',
-            'buyer_email' => $request->email,
+            'status' => 'Pending',
         ]);
 
         // Configure Midtrans parameters
@@ -51,6 +54,10 @@ class PaymentController extends Controller
                 'phone' => $request->phone,
             ],
         ];
+
+        $merchId = $request->merch_id;
+        $email = $request->email;
+        $this->sendReceipt($params, $merchId, $email);
 
         // Generate Snap token
         $snapToken = Snap::getSnapToken($params);
@@ -72,17 +79,56 @@ class PaymentController extends Controller
 
         // Handle payment status
         if ($notification->transaction_status == 'capture' || $notification->transaction_status == 'settlement') {
-            $transaction->update(['status' => 'success']);
-            session()->flash('status', 'Payment successful!');
-            return redirect()->route('merch'); // Adjust to your merch page route
+            $transaction->update(['status' => 'Success']);
+            session()->flash('status', 'Payment Successful!');
+            return redirect()->route('merch');
         } elseif ($notification->transaction_status == 'deny' || $notification->transaction_status == 'expire') {
-            $transaction->update(['status' => 'failed']);
-            session()->flash('error', 'Payment failed or expired!');
+            $transaction->update(['status' => 'Failed']);
+            session()->flash('error', 'Payment Failed or Expired!');
             return redirect()->back();
         } elseif ($notification->transaction_status == 'pending') {
-            $transaction->update(['status' => 'pending']);
+            $transaction->update(['status' => 'Pending']);
         }
 
         return response()->json(['message' => 'Notification processed']);
+    }
+
+    public function getAndSendReceipt ($transactionId) {
+
+        $transaction = Transaction::where('id', $transactionId)->get();
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $transaction->id,
+                'gross_amount' => $transaction->total_price,
+            ],
+            'customer_details' => [
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+                'phone' => auth()->user()->phone,
+            ],
+        ];
+
+        $merchId = $transaction->merch_id;
+
+        $email = auth()->user()->email;
+
+        $this->sendReceipt($params, $merchId, $email);
+    }
+
+    public function sendReceipt($params, $merchId, $email) {
+        $merchName = Merchandise::where('merch_id', $merchId)->firstOrFail()->merch_name;
+
+        $receiptData = [
+            'order_id' => $params['transaction_details']['order_id'],
+            'name' => $params['customer_details']['name'],
+            'email' => $params['customer_details']['email'],
+            'phone' => $params['customer_details']['phone'],
+            'merch_name' => $merchName,
+            'total' => $params['transaction_details']['gross_amount'],
+            'date' => Carbon::now()->format('H:i d/m/Y')
+        ];
+
+        Mail::to($email)->send(new ReceiptMail($receiptData));
     }
 }
