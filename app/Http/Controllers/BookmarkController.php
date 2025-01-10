@@ -25,13 +25,13 @@ class BookmarkController extends Controller
 
         if($bookmark) {
             $bookmark->delete();
-            return redirect()->back()->with('message', 'Bookmark removed!');
+            return redirect()->back()->with('message', __('messages.bookmark.remove'));
         } else {
             Bookmark::create([
                 'user_id' => $userId,
                 'article_id' => $articleId,
             ]);
-            return redirect()->back()->with('message', 'Added to bookmark!');
+            return redirect()->back()->with('message', __('messages.bookmark.added'));
         }
     }
 

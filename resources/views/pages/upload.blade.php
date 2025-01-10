@@ -1,16 +1,16 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', @lang('messages.upload.article.heading'))
 @section('content')
 <div class="container mx-auto px-6 py-12">
     <div class="bg-white shadow-lg rounded-lg p-6">
-        <h1 class="text-3xl font-semibold text-indigo-600 mb-6">Upload New Article</h1>
+        <h1 class="text-3xl font-semibold text-indigo-600 mb-6">@lang('messages.upload.article.heading')</h1>
         
-        <form action="{{ route('articles.store') }}" method="POST">
+        <form action="{{ route('article.store') }}" method="POST">
             @csrf
 
             <!-- Title Field -->
             <div class="mb-4">
-                <label for="title" class="block text-gray-700 text-lg font-medium">Title</label>
+                <label for="title" class="block text-gray-700 text-lg font-medium">@lang('messages.upload.article.title')</label>
                 <input 
                     type="text" 
                     name="title" 
@@ -26,25 +26,25 @@
 
             <!-- Category Field -->
             <div class="mb-4">
-                <label for="category" class="block text-gray-700 text-lg font-medium">Category</label>
+                <label for="category_id" class="block text-gray-700 text-lg font-medium">@lang('messages.upload.article.category')</label>
                 <select 
-                    name="category" 
-                    id="category" 
+                    name="category_id" 
+                    id="category_id" 
                     class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                 >
-                    <option value="facts" {{ old('category') == 'facts' ? 'selected' : '' }}>Facts</option>
-                    <option value="education" {{ old('category') == 'education' ? 'selected' : '' }}>Education</option>
-                    <option value="news" {{ old('category') == 'news' ? 'selected' : '' }}>News</option>
+                    <option value="1" {{ old('category_id') == '1' ? 'selected' : '' }}>Facts</option>
+                    <option value="2" {{ old('category_id') == '2' ? 'selected' : '' }}>Education</option>
+                    <option value="3" {{ old('category_id') == '3' ? 'selected' : '' }}>News</option>
                 </select>
-                @error('category')
+                @error('category_id')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-
+       
             <!-- Source URL Field -->
             <div class="mb-4">
-                <label for="source_url" class="block text-gray-700 text-lg font-medium">Source URL</label>
+                <label for="source_url" class="block text-gray-700 text-lg font-medium">@lang('messages.upload.article.source')</label>
                 <input 
                     type="url" 
                     name="source_url" 
@@ -60,7 +60,7 @@
 
             <!-- Author Name Field -->
             <div class="mb-4">
-                <label for="author_name" class="block text-gray-700 text-lg font-medium">Author Name</label>
+                <label for="author_name" class="block text-gray-700 text-lg font-medium">@lang('messages.upload.article.author')</label>
                 <input 
                     type="text" 
                     name="author_name" 
@@ -76,7 +76,7 @@
 
             <!-- Description Field -->
             <div class="mb-4">
-                <label for="description" class="block text-gray-700 text-lg font-medium">Description</label>
+                <label for="description" class="block text-gray-700 text-lg font-medium">@lang('messages.upload.article.description')</label>
                 <textarea 
                     name="description" 
                     id="description" 
@@ -91,24 +91,23 @@
 
             <!-- Upload Date Field -->
             <div class="mb-4">
-                <label for="upload_date" class="block text-gray-700 text-lg font-medium">Upload Date</label>
+                <label for="uploaded_date" class="block text-gray-700 text-lg font-medium">@lang('messages.upload.article.upload.date')</label>
                 <input 
                     type="date" 
-                    name="upload_date" 
-                    id="upload_date" 
+                    name="uploaded_date" 
+                    id="uploaded_date" 
                     class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value="{{ old('upload_date') }}"
-                    required
+                    value="{{ old('uploaded_date') }}"
                 >
-                @error('upload_date')
+                @error('uploaded_date')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            
+
             <!-- Submit Button -->
             <div class="mt-6">
                 <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    Upload Article
+                    @lang('messages.upload.article.submit')
                 </button>
             </div>
         </form>

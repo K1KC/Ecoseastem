@@ -2,7 +2,7 @@
 @section('title', 'Home Page')
 @section('content')
     <section class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10 ml-8 mr-8">
-        <h3 class="text-2xl font-bold mb-6">Our Knowledge of the Day</h3>
+        <h3 class="text-2xl font-bold mb-6">{{__('messages.articles.pages.heading')}}</h3>
         @foreach ($articles as $article)
             @include('layout.article-postcard', [               
                     'title' => $article->title,

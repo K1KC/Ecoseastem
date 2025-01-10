@@ -6,10 +6,10 @@
     @if (session('error'))
         <div id="errorPopup" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                <h2 class="text-lg font-bold text-red-600 mb-4">Payment Failed</h2>
+                <h2 class="text-lg font-bold text-red-600 mb-4">{{__('messages.transaction.payfail')}}</h2>
                 <p class="text-gray-600">{{ session('error') }}</p>
                 <button onclick="closePopup('errorPopup')" class="mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-                    Close
+                    X
                 </button>
             </div>
         </div>
@@ -22,7 +22,7 @@
 
             @include('layout.checkout-merch-info',[
                 'name'=>$merch->name,
-                'thumbnail'=>$merch->thumbnail_link,
+                'thumbnail'=>$merch->thumbnail,
                 'description'=>$merch->description,
                 'price'=>$merch->price,
                 'stock'=>$merch->stock
@@ -53,46 +53,48 @@
     </form>
 </div>
 
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+
 <script>
-    document.getElementById('pay-button').addEventListener('click', function () {
+    document.getElementById('pay-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const form = document.getElementById('checkout-form');
+        
+        // Send form data via AJAX to your backend to create an order
         fetch("{{ route('checkout') }}", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             },
-            body: JSON.stringify({
-                email: document.getElementById('email').value,
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value,
-                merch_id: "{{ $merch_id }}",
-                total: "{{ $total }}",
-            })
+            body: JSON.stringify(new FormData(form))
         })
         .then(response => response.json())
         .then(data => {
-            if (data.snapToken) {
-                snap.pay(data.snapToken, {
+            if (data.snap_token) {
+                // Use the token to open Midtrans payment page
+                snap.pay(data.snap_token, {
                     onSuccess: function(result) {
-                        window.location.href = "{{ route('payment.success') }}";
+                        alert("Payment Success!");
+                        // Redirect user or update order status
+                        window.location.href = '/order/success';
                     },
                     onPending: function(result) {
-                        alert('Waiting for payment!');
+                        alert("Waiting for Payment!");
                     },
                     onError: function(result) {
-                        alert('Payment failed!');
+                        alert("Payment Failed!");
                     }
                 });
+            } else {
+                alert('Error: Could not generate payment token.');
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Payment processing error');
         });
     });
-
-    function closePopup(popupId) {
-        const popup = document.getElementById(popupId);
-        if (popup) {
-            popup.style.display = 'none';
-        }
-    }
 </script>
 @endsection

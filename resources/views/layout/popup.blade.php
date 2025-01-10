@@ -1,7 +1,14 @@
+@if(session('message') || session('status'))
 <div id="popup-message" 
      class="fixed bottom-4 right-4 bg-green-500 text-white text-sm font-medium px-4 py-2 rounded shadow-lg opacity-0 transform transition duration-300">
     {{ $message }}
 </div>
+@elseif(session('error'))
+<div id="popup-message" 
+     class="fixed bottom-4 right-4 bg-red-700 text-white text-sm font-medium px-4 py-2 rounded shadow-lg opacity-0 transform transition duration-300">
+    {{ $message }}
+</div>
+@endif
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

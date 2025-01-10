@@ -53,7 +53,7 @@ class ProfileController extends Controller
         // Save the changes
         $user->save();
 
-        return redirect()->route('profile', $user->name)->with('success', 'Profile updated successfully!');
+        return redirect()->route('profile', $user->name)->with('message', __('messages.profile.edit.success'));
     }
 
 }

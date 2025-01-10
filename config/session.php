@@ -143,7 +143,7 @@ return [
     |
     */
 
-    'path' => env('SESSION_PATH', '/'),
+    'path' => storage_path('framework/sessions'),
 
     /*
     |--------------------------------------------------------------------------

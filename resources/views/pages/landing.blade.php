@@ -4,14 +4,18 @@
 <div class="banner bg-cover bg-center text-white text-center py-64 relative overflow-hidden" style="background-image: url('banner.jpg')">
     <div class="banner-content w-full sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
         <h1 class="text-4xl font-semibold mb-4">Ecoseastem</h1>
-        <p class="text-lg mb-6">Provide all of the knowledge of the ocean to honour and preserve the might and beautiful ocean!</p>
+        <p class="text-lg mb-6">@lang('messages.motto')</p>
     </div>
     <div class="curve absolute bottom-0 left-0 right-0 h-32 bg-blue-500"></div>
 </div>
 
+    <p>Current locale: {{ App::getLocale() }}</p>
+    <p>Session Locale: {{ session('locale') }}</p>
+    <p>App Locale: {{ App::getLocale() }}</p>
+
 
     <section class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10 ml-8 mr-8">
-        <h3 class="text-2xl font-bold mb-6">Our Knowledge of the Day</h3>
+        <h3 class="text-2xl font-bold mb-6">{{__('messages.landing.articles.heading')}}</h3>
         @foreach ($articles as $article)
         @include('layout.article-postcard', [               
                 'title' => $article->title,
@@ -27,12 +31,13 @@
     </section>
 
     <section class="mt-10 ml-8 mr-8">
-        <h3 class="text-2xl font-bold mb-6">Our Merch</h3>
+        <h3 class="text-2xl font-bold mb-6">{{__('messages.landing.merch')}}</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($merchs as $merch)
                 @include('layout.merch-card', [
-                    'merch_id'=>$merch->merch_id,
+                    'merch_id'=>$merch->id,
                     'name'=>$merch->name,
+                    'thumbnail'=>$merch->thumbnail,
                     'description'=>$merch->description,
                     'stock'=>$merch->stock,
                     'price'=>$merch->price

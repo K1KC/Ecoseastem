@@ -10,6 +10,7 @@ class Bookmark extends Model
 
     protected $guarded = [];
 
+    public $timestamps = true;
     public function article() {
         return $this->belongsTo(Article::class);
     }

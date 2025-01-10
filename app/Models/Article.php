@@ -13,6 +13,7 @@ class Article extends Model
 
     protected $guarded = [''];
 
+    public $timestamps = true;
 
     public function category() 
     {

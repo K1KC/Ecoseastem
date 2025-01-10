@@ -7,6 +7,8 @@ use App\Models\Article;
 use App\Models\Bookmark;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ArticleController extends Controller
 {
@@ -34,10 +36,9 @@ class ArticleController extends Controller
         $category_id = $request->input('category_id');
 
         if($category_id == 0) {
-            return route('articles');
+            return redirect()->route('articles');
         }
-
-        $articles = Article::where('category_id', $category_id)->paginate(10);
+        $articles = Article::where('category_id', $category_id)->paginate(5);
         $categories = $this->categoryController->getAllCategories();
         $user_id = auth()->id();
         $current_category = Category::find($category_id);
@@ -60,16 +61,28 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|in:facts,education,news',
+            'category_id' => 'required|exists:categories,id',
             'source_url' => 'required|url',
             'author_name' => 'required|string|max:255',
             'description' => 'required|string',
-            'upload_date' => 'required|date'
+            'uploaded_date' => 'nullable|date'
         ]);
 
-        // Create new article
-        Article::create($validated);
+        Log::info('Validated data:', $validated);
 
-        return redirect()->route('articles')->with('success', 'Article Uploaded Successfully!');
+        $uploadDate = $validated['upload_date'] ?? Carbon::now()->format('Y-m-d');
+
+        $article = new Article();
+        $article->title = $validated['title'];
+        $article->category_id = $validated['category_id'];
+        $article->source_url = $validated['source_url'];
+        $article->author_name = $validated['author_name'];
+        $article->description = $validated['description'];
+        $article->uploaded_date = $uploadDate;
+        $article->save();
+
+        Log::info('Article saved:', ['article' => $article]);
+
+        return redirect()->route('articles')->with('message', __('messages.upload.article.success'));
     }
 }

@@ -10,6 +10,7 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'merchandise_id', 'quantity', 'total_price'];
+    public $timestamps = true;
 
     public function user() {
         return $this->belongsTo(User::class);

@@ -15,7 +15,7 @@
 
         <!-- Profile Picture -->
         <div class="mb-4">
-            <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
+            <label for="profile_picture" class="block text-sm font-medium text-gray-700">{{__('messages.profile.picture')}}</label>
             <input type="file" name="profile_picture" id="profile_picture" class="mt-2 p-2 border border-gray-300 rounded-md w-full" accept="image/*">
             @if ($user->profile_picture)
                 <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="mt-4 rounded-full w-24 h-24 mx-auto">
@@ -27,7 +27,7 @@
 
         <!-- Name -->
         <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">{{__('messages.profile.name')}}</label>
             <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="mt-2 p-2 border border-gray-300 rounded-md w-full" required>
             @error('name')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
@@ -36,7 +36,7 @@
 
         <!-- Email -->
         <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <label for="email" class="block text-sm font-medium text-gray-700">{{__('messages.profile.email')}}</label>
             <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="mt-2 p-2 border border-gray-300 rounded-md w-full" required>
             @error('email')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
@@ -45,7 +45,7 @@
 
         <!-- Email -->
         <div class="mb-4">
-            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+            <label for="phone" class="block text-sm font-medium text-gray-700">{{__('messages.profile.phone')}}</label>
             <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="mt-2 p-2 border border-gray-300 rounded-md w-full" required>
             @error('phone')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="mb-4 flex justify-center">
-            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500">Update Profile</button>
+            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500">{{__('messages.edit.profile')}}</button>
         </div>
     </form>
 </div>

@@ -10,6 +10,7 @@ class Merchandise extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'thumbnail_link','description', 'price', 'stock'];
+    public $timestamps = true;
 
     public function transactions()
     {
