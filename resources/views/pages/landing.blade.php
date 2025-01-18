@@ -1,13 +1,15 @@
 @extends('layout.app')
 @section('title', 'Home Page')
 @section('content')
-<div class="banner bg-cover bg-center text-white text-center py-64 relative overflow-hidden" style="background-image: url('banner.jpg')">
-    <div class="banner-content w-full sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
+<div class="banner bg-content bg-center text-white text-center py-64 relative overflow-hidden" 
+     style="background-image: url('banner.jpg'); background-size: 100% 100%; background-position: center; width: 100%;">
+    <div class="banner-content w-max sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
         <h1 class="text-4xl font-semibold mb-4">Ecoseastem</h1>
         <p class="text-lg mb-6">@lang('messages.motto')</p>
     </div>
     <div class="curve absolute bottom-0 left-0 right-0 h-32 bg-blue-500"></div>
 </div>
+
 
     <section class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10 ml-8 mr-8">
         <h3 class="text-2xl font-bold mb-6">{{__('messages.landing.articles.heading')}}</h3>

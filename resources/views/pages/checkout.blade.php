@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'Checkout Page')
 @section('content')
 <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
@@ -55,7 +55,7 @@
 
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 
-<script>
+{{-- <script>
     document.getElementById('pay-button').addEventListener('click', function (e) {
         e.preventDefault();
         
@@ -96,5 +96,5 @@
             alert('Payment processing error');
         });
     });
-</script>
+</script> --}}
 @endsection

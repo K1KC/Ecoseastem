@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'Edit Profile Page')
 @section('content')
 <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
     <h2 class="text-2xl font-bold text-center text-gray-900">Edit Profile</h2>

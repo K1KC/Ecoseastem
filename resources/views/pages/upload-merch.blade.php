@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'Upload Merch Page')
 @section('content')
 <div class="container mx-auto px-6 py-12">
     <div class="bg-white shadow-lg rounded-lg p-6">

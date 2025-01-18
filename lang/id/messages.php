@@ -50,7 +50,7 @@ return [
     'profile.name' => 'Nama: ',
     'profile.email' => 'Email: ',
     'profile.phone' => 'Nomor Telepon: ',
-    'profile.total.transaction' => 'Total Transaksi: Rp',
+    'profile.total' => 'Total Transaksi: ',
     'edit.profile' => 'Sunting Profil',
     'profile.edit.success' => 'Sunting profil berhasil',
 

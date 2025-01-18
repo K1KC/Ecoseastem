@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'About Us Page')
 @section('content')
 <div class="container bg-cover bg-center mx-auto px-6 py-12 h-max" style="background-image: url('banner.jpg')">
     <div class="bg-white shadow-lg rounded-lg p-6">

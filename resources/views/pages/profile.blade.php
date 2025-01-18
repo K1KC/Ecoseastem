@@ -1,8 +1,8 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'Profile Page')
 @section('content')
 <section id="profile" class="bg-white mt-8 p-6 rounded-lg shadow-md text-center">
-    <h2 class="text-2xl font-bold text-gray-800">{{__('messages.profile.welcome')}}, {{ $user->name }}</h2>
+    <h2 class="text-2xl font-bold text-gray-800">{{__('messages.profile.welcome')}} {{ $user->name }}</h2>
     <div class="mt-4">
         @if(auth()->user()->profile_picture)
             <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="w-32 h-32 mx-auto rounded-full object-cover">

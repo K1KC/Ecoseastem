@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'Bookmark Page')
 @section('content')
 <div class="max-w-6xl mx-auto my-10 p-6 rounded-lg shadow-lg flex flex-col gap-8 bg-white">
     <h1 class="text-3xl font-bold mb-4 text-gray-900">{{__('messages.bookmark.page.heading')}}</h1>

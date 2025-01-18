@@ -49,7 +49,7 @@ return [
     'profile.name' => 'Name: ',
     'profile.email' => 'Email: ',
     'profile.phone' => 'Phone: ',
-    'profile.total.transaction' => 'Total Transaction: Rp',
+    'profile.total' => 'Total Transaction: Rp',
     'edit.profile' => 'Edit Profile',
     'profile.edit.success' => 'Profile Edit Success',
 

@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', 'Home Page')
+@section('title', 'Merch Page')
 @section('content')
 <div class="container mx-auto px-4 py-16">
     <h2 class="text-3xl font-semibold text-gray-800 mb-6">Eco Friendly Merchandises</h2>

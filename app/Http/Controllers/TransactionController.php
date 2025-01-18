@@ -54,7 +54,7 @@ class TransactionController extends Controller
             'gross_amount' => $transaction->total_price,
         ],
         'customer_details' => [
-            'name' => $request->name,
+            'first_name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
         ],
@@ -89,7 +89,7 @@ class TransactionController extends Controller
         return response()->json(['error' => __('messages.transaction.failtoken')], 500);
     }
 
-    return response()->json(['snapToken' => $snapToken]);
+    return response()->json(['transaction' => $transaction, 'snapToken' => $snapToken]);
 }
 
 

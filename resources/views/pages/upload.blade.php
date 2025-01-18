@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('title', @lang('messages.upload.article.heading'))
+@section('title', 'Upload')
 @section('content')
 <div class="container mx-auto px-6 py-12">
     <div class="bg-white shadow-lg rounded-lg p-6">
