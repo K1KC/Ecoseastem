@@ -54,7 +54,7 @@ class TransactionController extends Controller
             'gross_amount' => $transaction->total_price,
         ],
         'customer_details' => [
-            'first_name' => $request->name,
+            'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
         ],
