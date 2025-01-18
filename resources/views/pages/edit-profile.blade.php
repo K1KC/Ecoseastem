@@ -43,7 +43,7 @@
             @enderror
         </div>
 
-        <!-- Email -->
+        <!-- Phone -->
         <div class="mb-4">
             <label for="phone" class="block text-sm font-medium text-gray-700">{{__('messages.profile.phone')}}</label>
             <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="mt-2 p-2 border border-gray-300 rounded-md w-full" required>

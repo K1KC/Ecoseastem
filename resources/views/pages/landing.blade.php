@@ -9,11 +9,6 @@
     <div class="curve absolute bottom-0 left-0 right-0 h-32 bg-blue-500"></div>
 </div>
 
-    <p>Current locale: {{ App::getLocale() }}</p>
-    <p>Session Locale: {{ session('locale') }}</p>
-    <p>App Locale: {{ App::getLocale() }}</p>
-
-
     <section class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10 ml-8 mr-8">
         <h3 class="text-2xl font-bold mb-6">{{__('messages.landing.articles.heading')}}</h3>
         @foreach ($articles as $article)

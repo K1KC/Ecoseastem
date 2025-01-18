@@ -14,7 +14,7 @@ use App\Http\Middleware\AdminMiddleware;
 Auth::routes();
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-
+Route::get('/locale/{lang}', [LocaleController::class, 'setLocale'])->name('lang.switch');
 Route::get('/articles', [ArticleController::class, 'articlesPage'])->name('articles');
 
 Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
@@ -69,7 +69,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/merch/upload', [MerchandiseController::class, 'store'])->name('merch.store');
 });
 
-Route::get('/locale/{lang}', [LocaleController::class, 'setLocale'])->name('lang.switch');
+
 
 // Testing
 Route::get('/welcome', function() {
