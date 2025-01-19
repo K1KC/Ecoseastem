@@ -7,6 +7,7 @@
 
     <title>@yield('title', 'Ecoseastem')</title>
     <!-- Add Tailwind CSS -->
+    @vite('resources/css/app.css')
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // JavaScript to toggle the profile dropdown visibility
