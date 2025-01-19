@@ -14,5 +14,6 @@
           "src": "public/**",
           "use": "@vercel/static"
         }
-      ]
+      ],
+      "public": "public"
 }
