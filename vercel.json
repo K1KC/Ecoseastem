@@ -14,5 +14,6 @@
           "use": "@vercel/static"
         }
       ],
-      "outputDirectory": "builds"
+      "outputDirectory": "public",
+    "public": true
 }
