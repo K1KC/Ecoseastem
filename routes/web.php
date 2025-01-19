@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\AdminMiddleware;
 
-Route::middleware([App\Http\Middleware\SetLocale::class])->group(function() {{
+Route::middleware([App\Http\Middleware\SetLocale::class])->group(function() {
     Auth::routes();
     Route::get('/', [HomeController::class, 'index'])->name('home');
     
@@ -69,7 +69,7 @@ Route::middleware([App\Http\Middleware\SetLocale::class])->group(function() {{
     
         Route::post('/merch/upload', [MerchandiseController::class, 'store'])->name('merch.store');
     });
-}});
+});
 
 
 
