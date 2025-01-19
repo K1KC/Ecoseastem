@@ -8,12 +8,11 @@
         "src": "/(.*)",
         "dest": "/api/index.php"
     }],
-    "outputDirectory": "public",
+    "outputDirectory": "builds",
     "builds": [
         {
           "src": "public/**",
           "use": "@vercel/static"
         }
-      ],
-      "public": "true"
+      ]
 }
