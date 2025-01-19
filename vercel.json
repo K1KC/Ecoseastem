@@ -10,6 +10,11 @@
     {
       "src": "/(.*)",
       "dest": "/api/index.php"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1",
+      "continue": true
     }
   ],
     "outputDirectory": "public"
