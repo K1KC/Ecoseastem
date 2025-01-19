@@ -7,7 +7,6 @@
         <p class="text-gray-700 text-lg mb-4">{{ __('messages.about_us_intro') }}</p>
         <p class="text-gray-700 text-lg mb-4">{{ __('messages.about_us_belief') }}</p>
         <p class="text-gray-700 text-lg mb-4">{{ __('messages.about_us_merch') }}</p>
-        <p class="text-gray-700 text-lg mb-4">{{ __('messages.about_us_call_to_action') }}</p>
     </div>
 </div>
 @endsection
