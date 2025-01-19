@@ -2,7 +2,7 @@
 @section('title', 'Home Page')
 @section('content')
 <div class="banner bg-content bg-center text-white text-center py-64 relative overflow-hidden" 
-     style="background-image: url('banner.jpg'); background-size: 100% 100%; background-position: center; width: 100%;">
+     style="background-image: url('{{ asset('banner.jpg') }}'); background-size: 100% 100%; background-position: center; width: 100%;">
     <div class="banner-content w-max sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
         <h1 class="text-4xl font-semibold mb-4">Ecoseastem</h1>
         <p class="text-lg mb-6">@lang('messages.motto')</p>
