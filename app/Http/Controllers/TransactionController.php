@@ -8,161 +8,139 @@ use Illuminate\Http\Request;
 use App\Mail\ReceiptMail;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Midtrans\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
-    protected $merchandiseController;
-    
-    public function __construct(MerchandiseController $merchandiseController) {
-        $this->merchandiseController = $merchandiseController;
+    public function __construct()
+    {
+        // Configure Midtrans
         Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         Config::$clientKey = env('MIDTRANS_CLIENT_KEY');
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        Config::$isProduction = env('MIDTRANS_PRODUCTION', false);
     }
 
     public function checkout(Request $request)
     {
+        Log::info('Incoming request', $request->all());
+        // Validate input
+        $request->validate([
+            'email' => 'required|email',
+            'name' => 'required|string',
+            'phone' => 'required|string',
+            'merch_id' => 'required|numeric',
+            'total' => 'required|numeric|min:1',
+        ]);
 
-    $request->validate([
-        'email' => 'required|email',
-        'name' => 'required|string',
-        'phone' => 'required|string',
-        'merch_id' => 'required|numeric',
-        'total' => 'required|numeric',
-    ]);     
-
-    // Create a pending transaction
-    $transaction = Transaction::create([
-        'user_id' => auth()->id(),
-        'merch_id' => $request->merch_id,
-        'total_price' => $request->total,
-        'status' => 'Pending',
-    ]);
-
-    // Configure Midtrans parameters
-    Config::$serverKey = config('midtrans.server_key');
-    Config::$isProduction = false;
-    Config::$isSanitized = true;
-    Config::$is3ds = true;
-
-    $params = [
-        'transaction_details' => [
-            'order_id' => $transaction->id,
-            'gross_amount' => $transaction->total_price,
-        ],
-        'customer_details' => [
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-        ],
-    ];
-
-    $merchId = $request->merch_id;
-    try {
-        $merchandise = Merchandise::where('merch_id', $merchId)->firstOrFail();
-    } catch (\Exception $e) {
-        return response()->json(['error' => __('messages.transaction.merchnotfound')], 404);
-    }
-
-    $email = $request->email;
-    
-    if ($merchandise->stock > 0) {
-        $merchandise->stock -= 1;
-        $merchandise->save();
-    } else {
-        return response()->json(['error' => __('messages.transaction.stocknotavailable')], 400);
-    }
-
-    try {
-        $this->sendReceipt($params, $merchId, $email);
-    } catch (\Exception $e) {
-        return response()->json(['error' => __('messages.transaction.failsendreceipt')], 500);
-    }
-
-    // Generate Snap token
-    try {
-        $snapToken = Snap::getSnapToken($params);
-    } catch (\Exception $e) {
-        return response()->json(['error' => __('messages.transaction.failtoken')], 500);
-    }
-
-    return response()->json(['transaction' => $transaction, 'snapToken' => $snapToken]);
-}
-
-
-    public function notification(Request $request)
-    {
-        // Create Midtrans notification object
-        $notification = new \Midtrans\Notification();
-
-        // Retrieve the transaction using the order ID
-        $transaction = Transaction::find($notification->order_id);
-
-        if (!$transaction) {
-            return response()->json(['message' => __('messages.transaction.transnotfound')], 404);
+        // Check merchandise stock
+        $merchandise = Merchandise::find($request->merch_id);
+        if (!$merchandise || $merchandise->stock <= 0) {
+            return response()->json(['error' => __('messages.transaction.stocknotavailable')], 400);
         }
 
-        // Handle payment status
-        if ($notification->transaction_status == 'capture' || $notification->transaction_status == 'settlement') {
-            $transaction->update(['status' => 'Success']);
-            session()->flash('status', __('messages.transaction.paysuccess'));
-            return redirect()->route('merch');
-        } elseif ($notification->transaction_status == 'deny' || $notification->transaction_status == 'expire') {
-            $transaction->update(['status' => 'Failed']);
-            session()->flash('error', __('messages.transaction.payfail'));
-            return redirect()->back();
-        } elseif ($notification->transaction_status == 'pending') {
-            $transaction->update(['status' => 'Pending']);
-        }
+        // Create a pending transaction
+        $transaction = Transaction::create([
+            'user_id' => Auth::id(),
+            'merch_id' => $merchandise->id,
+            'total_price' => $request->total,
+            'status' => 'Pending',
+        ]);
 
-        return response()->json(['message' => __('messages.transaction.notifprocess')]);
-    }
+        // Deduct merchandise stock
+        $merchandise->decrement('stock');
 
-    public function getAndSendReceipt ($transactionId) {
-
-        $transaction = Transaction::where('id', $transactionId)->get();
-
+        // Prepare parameters for Midtrans
         $params = [
             'transaction_details' => [
                 'order_id' => $transaction->id,
                 'gross_amount' => $transaction->total_price,
             ],
             'customer_details' => [
-                'name' => auth()->user()->name,
-                'email' => auth()->user()->email,
-                'phone' => auth()->user()->phone,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
             ],
         ];
 
-        $merchId = $transaction->merch_id;
+        dd($request->all());
+        // Generate Snap token
+        try {
+            $snapToken = Snap::getSnapToken($params);
 
-        $email = auth()->user()->email;
+            // Send receipt
+            $this->sendReceipt($params, $merchandise, $request->email);
 
-        $this->sendReceipt($params, $merchId, $email);
+            return response()->json([
+                'transaction' => $transaction,
+                'snapToken' => $snapToken,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => __('messages.transaction.failtoken')], 500);
+        }
     }
 
-    public function sendReceipt($params, $merchId, $email) {
-        $merchandise = Merchandise::where('merch_id', $merchId)->firstOrFail();
-        $merchName = $merchandise->name;
+    public function notification(Request $request)
+    {
+        try {
+            // Create Midtrans notification object
+            $notification = new Notification();
 
+            // Find transaction using order ID
+            $transaction = Transaction::find($notification->order_id);
+            if (!$transaction) {
+                return response()->json(['message' => __('messages.transaction.transnotfound')], 404);
+            }
+
+            // Update transaction status
+            $status = $notification->transaction_status;
+            if (in_array($status, ['capture', 'settlement'])) {
+                $transaction->update(['status' => 'Success']);
+                session()->flash('status', __('messages.transaction.paysuccess'));
+                return redirect()->route('merch');
+            } elseif (in_array($status, ['deny', 'expire'])) {
+                $transaction->update(['status' => 'Failed']);
+                session()->flash('error', __('messages.transaction.payfail'));
+                return redirect()->back();
+            } elseif ($status === 'pending') {
+                $transaction->update(['status' => 'Pending']);
+            }
+
+            return response()->json(['message' => __('messages.transaction.notifprocess')]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => __('messages.transaction.notification_error')], 500);
+        }
+    }
+
+    public function sendReceipt($params, $merchandise, $email)
+    {
         $receiptData = [
             'order_id' => $params['transaction_details']['order_id'],
             'name' => $params['customer_details']['name'],
             'email' => $params['customer_details']['email'],
             'phone' => $params['customer_details']['phone'],
-            'merch_name' => $merchName,
+            'merch_name' => $merchandise->name,
             'total' => $params['transaction_details']['gross_amount'],
-            'date' => Carbon::now()->format('H:i d/m/Y')
+            'date' => Carbon::now()->format('H:i d/m/Y'),
         ];
 
-        Mail::to($email)->send(new ReceiptMail($receiptData));
+        try {
+            Mail::to($email)->send(new ReceiptMail($receiptData));
+        } catch (\Exception $e) {
+            throw new \Exception(__('messages.transaction.failsendreceipt'));
+        }
     }
-    public function showHistory() {
-        $transactions = Transaction::with(['user:id,name', 'merch:id,name'])->orderBy('created_at', 'desc')->get();;
+
+    public function showHistory()
+    {
+        // Retrieve transaction history
+        $transactions = Transaction::with(['user:id,name', 'merch:id,name'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('pages.transactions-history', compact('transactions'));
     }
 }
-

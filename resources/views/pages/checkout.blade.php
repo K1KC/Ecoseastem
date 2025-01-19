@@ -45,7 +45,7 @@
             </div>
             <input type="hidden" name="total" value="{{ $total }}">
             <div class="mt-6">
-                <button type="button" id="pay-button" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">
+                <button type="submit" id="pay-button" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">
                     Confirm Order
                 </button>
             </div>
