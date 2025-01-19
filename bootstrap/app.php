@@ -18,7 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
             // App\Http\Middleware\AdminMiddleware::class,
             App\Http\Middleware\SetLocale::class,
         ]);
-        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
